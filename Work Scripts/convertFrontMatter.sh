@@ -1,55 +1,59 @@
-#!/bin/bash
-Main () {
-checkArguments $*
+#!/usr/bin/env bash
+# Purpose: Convert blog posts and its front matters from a specific older layout to a newer layout of the blog
+# Author: Vinícius Godoy (@vinicius-godoy)
 
-if [ -d $1 ] && [ -d $2 ]; then
-  cd $1
-  files=`ls *.md`
-  fileCount=1
-  fileTotal=`echo "$files" | wc -w` # Gets the total number of files on the to be updated directory
-  for file in $files; do
-    count=0
-    title=""
-    description=""
-    # Categories and tags need to begin with empty space for normalization purposes later on the program
-    categories=" "
-    tags=" "
-    while IFS=: read -r key value; do
-      if [ "$key" = "---" ]; then
-        count=$[count + 1]
-      fi
-      case $key in
-        "date") dateVar=$value;;
-        "draft") draft=$value;;
-        "title") slug=$value;;
-        "h1SEO") lastValue="title"; title=$value;;
-        "descriptionSEO") descriptionNullCheck;;
-        "author") author=$value;;
-        "image") thumbnail=$value;;
-        "description") descriptionNullCheck;;
-        "tags") lastValue="tags";;
-        "category") lastValue="category";;
-        # Some key values never used on the new template
-        "format") ;;
-        "seo") ;;
-        "cover") ;;
-        "images") ;;
-        *) multiLineValues;;
-      esac
-      if [ $count -eq 2 ]; then
-        # After reaching the end of the frontmatter stop reading the file
-        break
-      fi
-    done < $file
-    normalizeStrings
-    createNewFiles $*
-    porcent=`bc <<< "scale=2; ($fileCount/$fileTotal)*100"`
-    porcent=${porcent/.00}
-    echo "Arquivo $fileCount/$fileTotal criado com sucesso! $porcent% concluído"
-    fileCount=$[fileCount + 1]
-  done
-fi
+Main () {
+  checkArguments $*
+
+  if [ -d $1 ] && [ -d $2 ]; then
+    cd $1
+    files=`ls *.md`
+    fileCount=1
+    fileTotal=`echo "$files" | wc -w` # Gets the total number of files on the to be updated directory
+    for file in $files; do
+      count=0
+      title=""
+      description=""
+      # Categories and tags need to begin with empty space for normalization purposes later on the program
+      categories=" "
+      tags=" "
+      while IFS=: read -r key value; do
+        if [ "$key" = "---" ]; then
+          count=$[count + 1]
+        fi
+        case $key in
+          "date") dateVar=$value;;
+          "draft") draft=$value;;
+          "title") slug=$value;;
+          "h1SEO") lastValue="title"; title=$value;;
+          "descriptionSEO") descriptionNullCheck;;
+          "author") author=$value;;
+          "image") thumbnail=$value;;
+          "description") descriptionNullCheck;;
+          "tags") lastValue="tags";;
+          "category") lastValue="category";;
+          # Some key values never used on the new template
+          "format") ;;
+          "seo") ;;
+          "cover") ;;
+          "images") ;;
+          *) multiLineValues;;
+        esac
+        if [ $count -eq 2 ]; then
+          # After reaching the end of the frontmatter stop reading the file
+          break
+        fi
+      done < $file
+      normalizeStrings
+      createNewFiles $*
+      porcent=`bc <<< "scale=2; ($fileCount/$fileTotal)*100"`
+      porcent=${porcent/.00}
+      echo "Arquivo $fileCount/$fileTotal criado com sucesso! $porcent% concluído"
+      fileCount=$[fileCount + 1]
+    done
+  fi
 }
+
 checkArguments (){
   if [ $# -ne 2 ]; then
     echo "O script precisa de 2 argumentos"
@@ -58,12 +62,14 @@ checkArguments (){
     exit
   fi
 }
+
 descriptionNullCheck (){
   lastValue="description"
   if [ "$value" != "''" ] & [ "$value" != "" ]; then
     description=$value
   fi
 }
+
 multiLineValues (){
   if [ "$key" = "---" ] || [[ ! -z $value ]]; then
     lastValue=""
@@ -77,6 +83,7 @@ multiLineValues (){
     *) ;;
   esac
 }
+
 # Remove dupe spaces and transform tags and categories on javascript style arrays
 normalizeStrings () {
   description=${description//  / }
@@ -90,6 +97,7 @@ normalizeStrings () {
   categories=${categories//./, }
   categories="${categories}]"
 }
+
 createNewFiles () {
   folder=${file//.md}
   mkdir "$2/$folder"
@@ -118,4 +126,5 @@ createNewFiles () {
     fi
   done < $file
 }
+
 Main $*

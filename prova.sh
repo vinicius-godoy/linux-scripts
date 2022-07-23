@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Main () {
     checarArgumentos $*
@@ -9,6 +9,7 @@ Main () {
     grep -so "$1" * .*
     echo
 }
+
 checarArgumentos () {
     if [ $# -ne 2 ]; then
         echo "Execute o script ./ex07.sh informando"
@@ -16,6 +17,7 @@ checarArgumentos () {
         echo; exit
     fi
 }
+
 checarDiretorio () {
     if [ ! -d $2 ]; then
         echo "O $2 informado não existe"
@@ -23,4 +25,5 @@ checarDiretorio () {
         echo; exit
     fi
 }
+
 Main $*

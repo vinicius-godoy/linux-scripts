@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 Principal () {
   clear; echo
   echo "           MENU           "
@@ -16,6 +17,7 @@ Principal () {
     *) erro;;
   esac
 }
+
 senha () {
   clear; echo;
   read -sp "Digite a senha para continuar: " senha; echo
@@ -26,6 +28,7 @@ senha () {
     senha
   fi
 }
+
 identifica () {
   clear; echo
   read -p "Digite o nome do usuário: " usuario; echo
@@ -36,6 +39,7 @@ identifica () {
   fi
   volta
 }
+
 cria () {
   clear; echo
   read -p "Digite o nome do usuário que deseja criar: " usuario; echo
@@ -47,6 +51,7 @@ cria () {
   fi
   volta
 }
+
 apaga () {
   clear; echo
   read -p "Digite o nome do usuário que deseja deletar: " usuario; echo
@@ -59,13 +64,17 @@ apaga () {
   fi
   volta
 }
+
 sair () {
   echo "Encerrando..."; sleep 5; clear; exit
 }
+
 erro () {
   clear; echo "Digite uma opção válida! (1-4)"; volta
 }
+
 volta () {
   sleep 3; Principal
 }
+
 senha

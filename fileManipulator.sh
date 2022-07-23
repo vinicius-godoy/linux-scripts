@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 Main () {
 checkArguments $*
 
 menuLoop $*
 }
+
 checkArguments () {
   if [ $# -ne 1 ]; then
     echo "O script precisa de 1 argumento"
@@ -18,6 +19,7 @@ checkArguments () {
     exit
   fi
 }
+
 menuLoop () {
   clear
   echo
@@ -46,6 +48,7 @@ menuLoop () {
     *) handleDefault $*;;
   esac
 }
+
 executeWc () {
   bytes=`cat $1 | wc -c`
   chars=`cat $1 | wc -m`
@@ -61,6 +64,7 @@ executeWc () {
   waitMenu
   Main $*
 }
+
 executeCut () {
   echo
   read -p "Informe o número do campo que quer extrair do arquivo: " n
@@ -72,6 +76,7 @@ executeCut () {
   waitMenu
   Main $*
 }
+
 executeSed () {
   echo 
   read -p "Informe a informação a ser substituída: " old
@@ -86,6 +91,7 @@ executeSed () {
   waitMenu
   Main $*
 }
+
 executeGrep () {
   read -p "Digite o que você quer buscar no arquivo: " search
 
@@ -99,6 +105,7 @@ executeGrep () {
   waitMenu
   Main $*
 }
+
 executeTr () {
   echo "Transformar em maiúsculo (1) ou minúsculo (2)?"
   read -p "Opção -> " opc
@@ -116,6 +123,7 @@ executeTr () {
   waitMenu
   Main $*
 }
+
 executeUniq () {
   echo
   result=`uniq $1`
@@ -126,6 +134,7 @@ executeUniq () {
   waitMenu
   Main $*
 }
+
 executeSort () {
   echo "Ordenar alfabeticamente (1), ao contrário (2) ou aleatóriamente (3)?"
   read -p "Opção -> " opc
@@ -144,6 +153,7 @@ executeSort () {
   waitMenu
   Main $*
 }
+
 executePaste () {
   read -p "Dê o caminho do arquivo que você irá unir: " file
 
@@ -158,6 +168,7 @@ executePaste () {
   waitMenu
   Main $*
 }
+
 handleDefault () {
   clear
   echo "Escolha uma opção existente!!!"
@@ -165,6 +176,7 @@ handleDefault () {
   sleep 2
   Main $*
 }
+
 waitMenu () {
   echo
   echo -n "Voltando ao menu em"
@@ -179,4 +191,5 @@ waitMenu () {
   echo -n " 1..."
   sleep 1
 }
+
 Main $*

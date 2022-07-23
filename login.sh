@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 clear;echo
 echo -e "Identificação do usuário XUBUNTU";
 echo -e "Informe seu nome em até 10 segundos";echo

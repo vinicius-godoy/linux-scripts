@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 clear;echo
 echo -e "Converter segundos em minutos e segundos"
 read -p "Tempo em segundos: " tempo

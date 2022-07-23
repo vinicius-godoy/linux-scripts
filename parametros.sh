@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 clear; echo
 if [ $# -ne 2 ]; then
   echo "Forneça como argumentos do script o diretório e a extensão"; echo

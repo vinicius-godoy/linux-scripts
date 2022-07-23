@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 Principal () {
 clear; echo
 read -p "Caminho do diretório: " dir; echo 
@@ -21,15 +22,18 @@ else
   reiniciar
 fi
 }
+
 reiniciar () {
-sleep 3; Principal
+  sleep 3; Principal
 }
+
 modificarTexto () {
-cat "${dir}/${arq}"; echo
-echo "Colocando um X na frente e atrás de todas as palavras..."; echo
-for word in $(cat "${dir}/${arq}"); do
-  echo -n "X${word}X "
-done
-echo; reiniciar
+  cat "${dir}/${arq}"; echo
+  echo "Colocando um X na frente e atrás de todas as palavras..."; echo
+  for word in $(cat "${dir}/${arq}"); do
+    echo -n "X${word}X "
+  done
+  echo; reiniciar
 }
+
 Principal

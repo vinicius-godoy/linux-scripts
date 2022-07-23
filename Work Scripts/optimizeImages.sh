@@ -1,26 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Purpose: Optimize every png file on a folder, revert bad optimizations and collect stats about it
 # Author: Vinícius Godoy (vinicius-godoy)
 
 Main () {
-    checkArguments $*
-    setGlobalParams $*
-    checkDirectories
-
-    setVars
-
-    while IFS=: read -r file || [ -n "$file" ]; do
-        fileSize=`du --bytes $folder/$file`
-        fileSize=`echo $fileSize | head -n1 | awk '{print $1;}'`
-        if [ $fileSize -gt 150000 ]; then
-            squoosh-cli --oxipng auto $folder/$file
-        else
-            echo "File skipped because of size"
-        fi
-    done < <(printf "$files")
-
-    showStats
-    exit 0
+  checkArguments $*
+  setGlobalParams $*
+  checkDirectories
+  
+  setVars
+  
+  while IFS=: read -r file || [ -n "$file" ]; do
+    fileSize=`du --bytes $folder/$file`
+    fileSize=`echo $fileSize | head -n1 | awk '{print $1;}'`
+    if [ $fileSize -gt 150000 ]; then
+      squoosh-cli --oxipng auto $folder/$file
+    else
+      echo "File skipped because of size"
+    fi
+  done < <(printf "$files")
+  
+  showStats
+  exit 0
 }
 
 checkArguments () {
@@ -46,24 +46,24 @@ setGlobalParams () {
 }
 
 setVars () {
-    beginTime=$SECONDS
-    files=`ls $folder`
-    folderSizeBefore=`du --bytes $folder`
-    folderSizeBefore=`echo $folderSizeBefore | head -n1 | awk '{print $1;}'`
+  beginTime=$SECONDS
+  files=`ls $folder`
+  folderSizeBefore=`du --bytes $folder`
+  folderSizeBefore=`echo $folderSizeBefore | head -n1 | awk '{print $1;}'`
 }
 
 showStats () {
-    folderSizeAfter=`du --bytes $folder`
-    folderSizeAfter=`echo $folderSizeAfter | head -n1 | awk '{print $1;}'`
-    endTime=$SECONDS
-    timeElapsed=$[endTime-beginTime]
-    spaceSaved=$[folderSizeBefore-folderSizeAfter]
-
-    echo "Script finished with $timeElapsed seconds of execution"
-    echo "Folder size before script: $folderSizeBefore bytes"
-    echo "Folder size after script:  $folderSizeAfter bytes"
-    echo "$spaceSaved bytes gained on folder"
-    echo
+  folderSizeAfter=`du --bytes $folder`
+  folderSizeAfter=`echo $folderSizeAfter | head -n1 | awk '{print $1;}'`
+  endTime=$SECONDS
+  timeElapsed=$[endTime-beginTime]
+  spaceSaved=$[folderSizeBefore-folderSizeAfter]
+  
+  echo "Script finished with $timeElapsed seconds of execution"
+  echo "Folder size before script: $folderSizeBefore bytes"
+  echo "Folder size after script:  $folderSizeAfter bytes"
+  echo "$spaceSaved bytes gained on folder"
+  echo
 }
 
 Main $*

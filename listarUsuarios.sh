@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 clear; echo
 echo "Lendo o /etc/passwd e exibindo os usuários com id maior ou igual a 500"
 while IFS=: read -r nome senha identificacao grupo comentario diretorio shell; do
