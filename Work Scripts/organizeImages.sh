@@ -25,9 +25,9 @@ Main () {
       sedImage=${image//\//\\\/}
       sedImage=${sedImage//\./\\\.}
       # Remove the links from the post
-      eval "sed --in-place 's/https:\/\/${bucketName}\.s3\.${bucketLocale}\.amazonaws\.com\/public\///g' $postsFolder/$folder/index.mdx"
+      eval "sed -i '' 's/https:\/\/${bucketName}\.s3\.${bucketLocale}\.amazonaws\.com\/public\///g' $postsFolder/$folder/index.mdx"
       # Copy the image files to the post directories
-      cp "${imagesFolder}/${fileName}" ${postsFolder}/${folder}/ 2>/dev/null
+      cp "${imagesFolder}/${fileName}" ${postsFolder}/${folder}/ &>/dev/null
       # If the copy is successfull increase the successes on the file
       if [ $? -eq 0 ]; then
         imgSuccess=$[imgSuccess + 1]
@@ -35,8 +35,6 @@ Main () {
         echo "$image wasn't copied successfully!"
       fi
     done < <(printf "$images")
-    # for image in $images; do
-    # done
     echo "$imgSuccess out of $imgNumber images copied successfuly to folder $folder"
     # If any image wasn't found or copied successfully push the name of the file to the fail array
     if [ $imgNumber -ne $imgSuccess ]; then
@@ -75,12 +73,12 @@ checkDirectories () {
 # Sets the parameters to variables with better naming and defaults and sets the absolute path to the parameters given if they are relative
 setGlobalParams () {
   initialPwd=`pwd`
-  cd $1
+  cd "$1"
   postsFolder=`pwd`
-  cd $initialPwd
-  cd $2
+  cd "$initialPwd"
+  cd "$2"
   imagesFolder=`pwd`
-  cd $initialPwd
+  cd "$initialPwd"
   bucketName="$3"
   bucketLocale="${4:-sa-east-1}"
 }
