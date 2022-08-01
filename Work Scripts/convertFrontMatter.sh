@@ -7,59 +7,57 @@ Main () {
   checkArguments $*
   setGlobalParams $*
 
-  if [ -d $oldFrontMatters ] && [ -d $newFrontMatters ]; then
-    cd $oldFrontMatters
-    files=`ls *.md`
-    fileCount=1
-    fileTotal=`echo "$files" | wc -w | xargs` # Gets the total number of files on the to be updated directory and trim the whitespaces
-    for file in $files; do
-      count=0
-      title=""
-      description=""
-      # Categories and tags need to begin with empty space for normalization purposes later on the program
-      categories=" "
-      tags=" "
-      while IFS=: read -r key value; do
-        if [ "$key" = "---" ]; then
-          count=$[count + 1]
-        fi
-        case $key in
-          "date") dateVar=$value;;
-          "draft") draft=$value;;
-          "title") slug=$value;;
-          "h1SEO") lastValue="title"; title=$value;;
-          "descriptionSEO") descriptionNullCheck;;
-          "author") author=$value;;
-          "image") thumbnail=$value;;
-          "description") descriptionNullCheck;;
-          "tags") lastValue="tags";;
-          "category") lastValue="category";;
-          # Some key values never used on the new template
-          "format") ;;
-          "seo") ;;
-          "cover") ;;
-          "images") ;;
-          *) multiLineValues;;
-        esac
-        if [ $count -eq 2 ]; then
-          # After reaching the end of the frontmatter stop reading the file
-          break
-        fi
-      done < $file
-      normalizeStrings
-      createNewFiles $*
+  cd $oldFrontMatters
+  files=`ls *.md`
+  fileCount=1
+  fileTotal=`echo "$files" | wc -w | xargs` # Gets the total number of files on the to be updated directory and trim the whitespaces
+  for file in $files; do
+    count=0
+    title=""
+    description=""
+    # Categories and tags need to begin with empty space for normalization purposes later on the program
+    categories=" "
+    tags=" "
+    while IFS=: read -r key value; do
+      if [ "$key" = "---" ]; then
+        count=$[count + 1]
+      fi
+      case $key in
+        "date") dateVar=$value;;
+        "draft") draft=$value;;
+        "title") slug=$value;;
+        "h1SEO") lastValue="title"; title=$value;;
+        "descriptionSEO") descriptionNullCheck;;
+        "author") author=$value;;
+        "image") thumbnail=$value;;
+        "description") descriptionNullCheck;;
+        "tags") lastValue="tags";;
+        "category") lastValue="category";;
+        # Some key values never used on the new template
+        "format") ;;
+        "seo") ;;
+        "cover") ;;
+        "images") ;;
+        *) multiLineValues;;
+      esac
+      if [ $count -eq 2 ]; then
+        # After reaching the end of the frontmatter stop reading the file
+        break
+      fi
+    done < $file
+    normalizeStrings
+    createNewFiles $*
+    if [ "$isVerbose" = true ]; then
       porcent=`bc <<< "scale=2; ($fileCount/$fileTotal)*100"`
       porcent=${porcent/.00}
-      if [ "$isVerbose" = true ]; then
-        echo -ne "Arquivo $fileCount/$fileTotal criado com sucesso! $porcent% concluído\r"
-      fi
+      echo -ne "Arquivo $fileCount/$fileTotal criado com sucesso! $porcent% concluído\r"
       fileCount=$[fileCount + 1]
-    done
-    if [ "$isDebug" = true ]; then
-      rm -rf $newFrontMatters/*
     fi
-    echo
+  done
+  if [ "$isDebug" = true ]; then
+    rm -rf $newFrontMatters/*
   fi
+  echo
 }
 
 Help() {
