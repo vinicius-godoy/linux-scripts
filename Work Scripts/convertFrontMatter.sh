@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Purpose: Convert blog posts and its front matters from a specific older layout to a newer layout of the blog
-# Author: Vinícius Godoy (@vinicius-godoy)
+# Author: Vinícius Godoy (vinicius-godoy)
 
 Main () {
   useFlags $*
